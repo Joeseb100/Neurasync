@@ -16,7 +16,7 @@ export default function Dashboard() {
   });
 
   return (
-    <div className="p-6 max-w-7xl mx-auto ml-24 md:ml-72">
+    <div className="p-6 max-w-7xl mx-auto">
       <header className="mb-8 flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
