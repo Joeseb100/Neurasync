@@ -19,20 +19,20 @@ const navItems: NavItem[] = [
 
 export default function Sidebar() {
   const [location] = useLocation();
-  
+
   const { data: user, isLoading } = useQuery<User>({ 
     queryKey: ['/api/user/profile'],
   });
 
   return (
-    <aside className="fixed inset-y-0 left-0 glass glass-highlight shadow-xl w-20 md:w-64 flex flex-col z-10 bg-opacity-80">
+    <aside className="fixed inset-y-0 left-0 glass glass-highlight shadow-xl w-20 md:w-64 flex flex-col z-10 bg-opacity-80"> {/* Added flex flex-col for better layout */}
       <div className="p-4 flex items-center justify-center md:justify-start">
         <div className="h-12 w-12 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
           <span className="text-white text-xl font-bold">N</span>
         </div>
         <h1 className="hidden md:block text-2xl font-bold ml-3 text-foreground">Neurasync</h1>
       </div>
-      
+
       <nav className="flex-1 pt-8">
         <ul>
           {navItems.map((item) => {
@@ -58,15 +58,15 @@ export default function Sidebar() {
           })}
         </ul>
       </nav>
-      
+
       <div className="p-4 border-t border-border border-opacity-40">
         <div className="flex items-center">
           <Avatar className="h-10 w-10 ring-2 ring-primary ring-opacity-30">
-            <AvatarImage src={user?.profileImage} alt={user?.name || 'User'} />
-            <AvatarFallback className="bg-secondary text-secondary-foreground">{user?.name?.charAt(0) || 'U'}</AvatarFallback>
+            <AvatarImage src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Albert_Einstein_Head.jpg/220px-Albert_Einstein_Head.jpg" alt="Jophit" /> {/* Einstein's image */}
+            <AvatarFallback className="bg-secondary text-secondary-foreground">J</AvatarFallback> {/* J for Jophit */}
           </Avatar>
           <div className="hidden md:block ml-3">
-            <p className="text-sm font-medium text-foreground">{isLoading ? 'Loading...' : user?.name}</p>
+            <p className="text-sm font-medium text-foreground">{isLoading ? 'Loading...' : 'Jophit'}</p> {/* Changed name to Jophit */}
             <p className="text-xs text-muted-foreground">{isLoading ? '' : user?.email}</p>
           </div>
         </div>
