@@ -33,7 +33,10 @@ export default function AnalysisModal({ open, onOpenChange }: AnalysisModalProps
 
   const saveAnalysisMutation = useMutation({
     mutationFn: async (analysis: EmotionAnalysis) => {
-      return apiRequest("POST", "/api/analysis/save", analysis);
+      return apiRequest("/api/analysis/save", {
+        method: "POST", 
+        data: analysis
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/stress/current'] });

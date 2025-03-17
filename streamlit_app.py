@@ -531,6 +531,37 @@ with col2:
     else:
         st.info("Please configure your Gemini API key to start chatting with Manassu.")
 
+# Setup API endpoint for integration with React frontend
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import threading
+
+# Create a Flask app for API endpoints
+api_app = Flask(__name__)
+CORS(api_app)  # Allow cross-origin requests
+
+@api_app.route('/api/detect_emotion', methods=['POST'])
+def api_detect_emotion():
+    """API endpoint for emotion detection accessible to the React frontend"""
+    try:
+        data = request.json
+        if not data or 'image' not in data:
+            return jsonify({'error': 'No image data provided'}), 400
+        
+        # Process the image using the existing detect_emotion function
+        result = detect_emotion(data['image'])
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# Start Flask API server in a separate thread
+def run_api_server():
+    api_app.run(host='0.0.0.0', port=8502)
+
+# Start the API server in a background thread when the app runs
+api_thread = threading.Thread(target=run_api_server, daemon=True)
+api_thread.start()
+
 # Footer
 st.markdown("---")
 st.caption("💭 Remember that while AI can provide support, it's not a substitute for professional mental health services.")

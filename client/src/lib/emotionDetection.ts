@@ -25,9 +25,9 @@ export async function detectEmotion(base64Image: string): Promise<EmotionAnalysi
       console.warn("Primary emotion detection failed, trying Streamlit fallback...", primaryError);
       
       // If the primary method fails, try to use the Streamlit app as a fallback
-      // The Streamlit app runs on port 8501 by default
+      // The Streamlit API runs on port 8502
       try {
-        const streamlitUrl = `${window.location.protocol}//${window.location.hostname}:8501/api/detect_emotion`;
+        const streamlitUrl = `${window.location.protocol}//${window.location.hostname}:8502/api/detect_emotion`;
         const streamlitResponse = await fetch(streamlitUrl, {
           method: 'POST',
           headers: {
