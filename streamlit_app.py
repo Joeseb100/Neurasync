@@ -112,15 +112,26 @@ def detect_emotion(img_base64):
     """
     try:
         from deepface import DeepFace
+        import cv2
+        import numpy as np
         
         # Convert base64 to image
-        img_data = base64.b64decode(img_base64)
+        img_data = base64.b64decode(img_base64.split(',')[1] if ',' in img_base64 else img_base64)
         nparr = np.frombuffer(img_data, np.uint8)
         img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         
-        # Analyze emotion
-        result = DeepFace.analyze(img, actions=['emotion'], enforce_detection=False)
-        emotions = result[0]['emotion']
+        if img is None:
+            raise ValueError("Failed to decode image")
+            
+        # Analyze emotion using deepface
+        result = DeepFace.analyze(img, 
+                                actions=['emotion'],
+                                detector_backend='opencv',
+                                enforce_detection=False,
+                                silent=True)
+        
+        # Handle single result or list of results
+        emotions = result[0]['emotion'] if isinstance(result, list) else result['emotion']
         
         # Get dominant emotion
         dominant_emotion = max(emotions.items(), key=lambda x: x[1])[0]
