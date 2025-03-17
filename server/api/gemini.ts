@@ -66,10 +66,11 @@ export async function generateGeminiResponse(
       }
     });
     
-    // If this is the first message, add therapeutic system prompt
+    // Prepare the message to send
     let promptToSend = userMessage;
+    
+    // If this is the first message, prepend the therapeutic system prompt
     if (!chatHistory || chatHistory.length === 0) {
-      // Combine system prompt with user message for the first interaction
       promptToSend = `${THERAPEUTIC_PROMPT}\n\nUser message: ${userMessage}`;
     }
     
@@ -101,7 +102,17 @@ function formatChatHistory(history?: ChatMessage[]): Content[] {
     return [];
   }
   
-  return history.map(message => {
+  // Ensure chat history starts with a user message
+  let formattedHistory = [...history];
+  if (formattedHistory[0].role !== 'user') {
+    // Add a dummy user message at the beginning if needed
+    formattedHistory.unshift({
+      role: 'user',
+      content: 'Hello'
+    });
+  }
+  
+  return formattedHistory.map(message => {
     return {
       role: message.role === 'user' ? 'user' : 'model',
       parts: [{ text: message.content }]
