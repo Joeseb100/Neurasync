@@ -210,8 +210,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         content
       });
       
-      // Get AI response
-      const response = await generateAITherapyResponse(openai, content);
+      // Get previous messages for context
+      const previousMessages = await storage.getMessagesByUserId(userId);
+      
+      // Format previous messages for the API
+      const chatHistory = previousMessages.map(msg => ({
+        role: msg.sender === 'user' ? 'user' : 'assistant',
+        content: msg.content
+      }));
+      
+      // Get AI response with chat history for context
+      const response = await generateAITherapyResponse(openai, content, chatHistory);
       
       // Save AI response
       const aiMessage = await storage.createMessage({

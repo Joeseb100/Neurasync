@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import AIChatbot from "@/components/therapy/AIChatbot";
 import { TherapySession } from "@/types";
+import { Separator } from "@/components/ui/separator";
 
 export default function Therapy() {
   const { data: sessions, isLoading } = useQuery<TherapySession[]>({
@@ -12,10 +12,11 @@ export default function Therapy() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <header className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-800">AI Therapy</h1>
-        <p className="text-neutral-darker mt-1">
-          Chat with our AI therapy assistant for personalized mental wellness support.
+      <header className="mb-8 text-center">
+        <h1 className="text-3xl font-bold text-primary">Therapeutic Support</h1>
+        <p className="text-gray-600 mt-2 max-w-2xl mx-auto">
+          Manassu is your AI therapeutic companion designed to provide motivational conversations
+          and supportive guidance for your wellness journey.
         </p>
       </header>
 
@@ -24,29 +25,90 @@ export default function Therapy() {
           <AIChatbot />
         </div>
 
-        <div>
-          <Card>
-            <CardContent className="p-6">
-              <h2 className="text-lg font-semibold text-gray-800 mb-6">Therapy History</h2>
+        <div className="space-y-6">
+          <Card className="shadow-md">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-xl font-semibold text-primary">About Manassu</CardTitle>
+              <CardDescription>
+                Your supportive AI companion
+              </CardDescription>
+            </CardHeader>
+            <Separator />
+            <CardContent className="pt-4">
+              <p className="text-sm text-gray-600 mb-4">
+                Manassu is designed to provide:
+              </p>
+              <ul className="space-y-2 text-sm text-gray-600 list-disc pl-5">
+                <li>Supportive and motivational conversations</li>
+                <li>A safe space for reflection and self-discovery</li>
+                <li>Empathetic responses to your thoughts and feelings</li>
+                <li>Practical suggestions for coping with daily challenges</li>
+                <li>Personalized guidance based on your individual needs</li>
+              </ul>
               
-              {isLoading ? (
-                <div className="py-8 flex justify-center">
-                  <p className="text-gray-500">Loading sessions...</p>
-                </div>
-              ) : sessions?.length === 0 ? (
-                <div className="py-8 text-center">
-                  <p className="text-gray-500 mb-4">No previous therapy sessions found.</p>
-                  <p className="text-sm text-gray-600">
-                    Start a conversation with the AI assistant to create your first session.
-                  </p>
-                </div>
-              ) : (
+              <div className="mt-4 p-3 bg-blue-50 rounded-md border border-blue-100">
+                <p className="text-xs text-blue-700">
+                  <i className="fas fa-info-circle mr-1"></i> While Manassu can provide support, it's not a replacement for professional therapy or medical advice.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="shadow-md">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-xl font-semibold text-primary">Wellness Resources</CardTitle>
+              <CardDescription>
+                Tools to support your mental health
+              </CardDescription>
+            </CardHeader>
+            <Separator />
+            <CardContent className="pt-4">              
+              <ul className="space-y-3">
+                <li>
+                  <Button variant="link" className="text-primary p-0 h-auto">
+                    <i className="fas fa-book-open mr-2"></i> Mindfulness Guide
+                  </Button>
+                </li>
+                <li>
+                  <Button variant="link" className="text-primary p-0 h-auto">
+                    <i className="fas fa-headphones mr-2"></i> Guided Meditation
+                  </Button>
+                </li>
+                <li>
+                  <Button variant="link" className="text-primary p-0 h-auto">
+                    <i className="fas fa-lungs mr-2"></i> Breathing Exercises
+                  </Button>
+                </li>
+                <li>
+                  <Button variant="link" className="text-primary p-0 h-auto">
+                    <i className="fas fa-moon mr-2"></i> Sleep Improvement
+                  </Button>
+                </li>
+                <li>
+                  <Button variant="link" className="text-primary p-0 h-auto">
+                    <i className="fas fa-heart mr-2"></i> Self-Compassion Practices
+                  </Button>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+          
+          {sessions && sessions.length > 0 && (
+            <Card className="shadow-md">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-xl font-semibold text-primary">Conversation History</CardTitle>
+                <CardDescription>
+                  Previous therapeutic sessions
+                </CardDescription>
+              </CardHeader>
+              <Separator />
+              <CardContent className="pt-4">
                 <div className="space-y-4">
-                  {sessions?.map((session, index) => (
-                    <div key={index} className="p-3 border rounded-lg hover:bg-neutral-lightest cursor-pointer">
+                  {sessions.map((session, index) => (
+                    <div key={index} className="p-3 border rounded-lg hover:bg-neutral-50 cursor-pointer transition-colors">
                       <div className="flex justify-between mb-1">
                         <p className="font-medium">{new Date(session.date).toLocaleDateString()}</p>
-                        <span className="text-xs bg-neutral-light px-2 py-1 rounded-full">
+                        <span className="text-xs bg-primary bg-opacity-10 text-primary px-2 py-1 rounded-full">
                           {session.duration} min
                         </span>
                       </div>
@@ -54,38 +116,9 @@ export default function Therapy() {
                     </div>
                   ))}
                 </div>
-              )}
-            </CardContent>
-          </Card>
-          
-          <Card className="mt-6">
-            <CardContent className="p-6">
-              <h2 className="text-lg font-semibold text-gray-800 mb-4">Wellness Resources</h2>
-              
-              <ul className="space-y-3">
-                <li>
-                  <Button variant="link" className="text-primary p-0 h-auto">
-                    <i className="fas fa-file-pdf mr-2"></i> Stress Management Guide
-                  </Button>
-                </li>
-                <li>
-                  <Button variant="link" className="text-primary p-0 h-auto">
-                    <i className="fas fa-file-audio mr-2"></i> Guided Meditation Audio
-                  </Button>
-                </li>
-                <li>
-                  <Button variant="link" className="text-primary p-0 h-auto">
-                    <i className="fas fa-file-video mr-2"></i> Breathing Exercises Video
-                  </Button>
-                </li>
-                <li>
-                  <Button variant="link" className="text-primary p-0 h-auto">
-                    <i className="fas fa-file-alt mr-2"></i> Sleep Improvement Tips
-                  </Button>
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </div>

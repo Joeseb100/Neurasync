@@ -1,0 +1,194 @@
+import streamlit as st
+import google.generativeai as genai
+import os
+from datetime import datetime
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Page configuration
+st.set_page_config(
+    page_title="Depstrack",
+    page_icon="",
+    layout="wide"
+)
+
+# Initialize session state for chat history if it doesn't exist
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+if "api_key_configured" not in st.session_state:
+    # Check if API key exists in environment variables
+    api_key = os.getenv("GEMINI_API_KEY")
+    st.session_state.api_key_configured = bool(api_key)
+    if api_key:
+        genai.configure(api_key=api_key)
+
+# System prompt to set therapeutic and motivational tone
+THERAPEUTIC_PROMPT = """
+You are a supportive and empathetic therapeutic assistant. 
+Please respond to all queries with a warm, compassionate tone that encourages growth and self-reflection.
+Use a conversational style that feels personal and caring.
+
+Your responses should:
+- Be supportive and non-judgmental
+- Offer gentle encouragement and motivation
+- Use empowering language that builds confidence
+- Ask thoughtful questions that promote self-reflection when appropriate
+- Acknowledge emotions and validate feelings
+- Provide practical coping strategies when relevant
+- Use a warm, conversational tone as if speaking to a friend
+
+Remember to maintain boundaries by not diagnosing conditions or replacing professional mental health care.
+"""
+
+def configure_genai(api_key):
+    """Configure the Gemini API with the provided key"""
+    genai.configure(api_key=api_key)
+    st.session_state.api_key_configured = True
+    return True
+
+def get_gemini_response(prompt, chat_history):
+    """Get response from Gemini model with therapeutic tone"""
+    try:
+        # Configure the model
+        model = genai.GenerativeModel('gemini-1.5-pro')
+        
+        # Start a chat session
+        chat = model.start_chat(history=chat_history)
+        
+        # Add therapeutic system prompt if this is the first message
+        if not chat_history:
+            # First combine the system prompt with the user's message
+            enhanced_prompt = f"{THERAPEUTIC_PROMPT}\n\nUser query: {prompt}"
+            response = chat.send_message(enhanced_prompt)
+        else:
+            # For subsequent messages, the tone should be established
+            response = chat.send_message(prompt)
+        
+        return response.text
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+def format_chat_history(messages):
+    """Format chat history for Gemini API"""
+    formatted_history = []
+    
+    # Add system prompt as the first message if there's chat history
+    if messages:
+        formatted_history.append({
+            "role": "model",
+            "parts": [THERAPEUTIC_PROMPT]
+        })
+    
+    for message in messages:
+        role = "user" if message["role"] == "user" else "model"
+        formatted_history.append({
+            "role": role,
+            "parts": [message["content"]]
+        })
+    
+    return formatted_history
+
+# Removed the Chatbot class definition
+
+
+# App title and description
+
+st.title(" Manassu")
+st.markdown("""
+This is a supportive AI companion designed to provide motivational and therapeutic conversations. 
+Share your thoughts, feelings, or challenges, and receive compassionate guidance.
+""")
+
+# API key input section with sidebar
+with st.sidebar:
+    st.header("Configuration")
+    
+    # Display API key status
+    if st.session_state.api_key_configured:
+        st.success("API key loaded from .env file!")
+    else:
+        st.warning("No API key found in .env file")
+        
+        st.markdown("### Manually enter API key")
+        api_key = st.text_input("Enter your Gemini API Key:", type="password")
+        
+        if st.button("Configure API"):
+            if api_key:
+                if configure_genai(api_key):
+                    st.success("API key configured successfully!")
+            else:
+                st.error("Please enter a valid API key")
+    
+    st.markdown("---")
+    st.markdown("""
+    ### About This Therapeutic Companion
+    
+    This chatbot is designed to:
+    - Provide supportive and motivational conversations
+    - Offer a safe space for reflection
+    - Respond with empathy and understanding
+    - Help you explore your thoughts and feelings
+    
+    *Remember: While this AI can provide support, it's not a replacement for professional therapy.*
+    """)
+    
+    if st.button("Clear Chat History"):
+        st.session_state.messages = []
+        st.rerun()
+
+# Chat interface
+if st.session_state.api_key_configured:
+    # Initial message if chat is empty
+    if not st.session_state.messages:
+        st.chat_message("assistant").markdown("""
+        Hi there! I'm your supportive AI companion. 
+        
+        I'm here to listen and provide encouragement as you navigate life's challenges. 
+        What's on your mind today? How can I support you?
+        """)
+        
+        # Add welcome message to history
+        st.session_state.messages.append({
+            "role": "assistant", 
+            "content": "Hi there! I'm your supportive AI companion. I'm here to listen and provide encouragement as you navigate life's challenges. What's on your mind today? How can I support you?"
+        })
+    
+    # Display chat messages
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+    
+    # Chat input
+    user_input = st.chat_input("Share your thoughts here...")
+    
+    if user_input:
+        # Add user message to chat history
+        st.session_state.messages.append({"role": "user", "content": user_input})
+        
+        # Display user message
+        with st.chat_message("user"):
+            st.markdown(user_input)
+        
+        # Display assistant response with a spinner
+        with st.chat_message("assistant"):
+            with st.spinner("Reflecting..."):
+                # Format chat history for Gemini
+                formatted_history = format_chat_history(st.session_state.messages[:-1])
+                
+                # Get response from Gemini
+                response = get_gemini_response(user_input, formatted_history)
+                
+                # Display the response
+                st.markdown(response)
+        
+        # Add assistant response to chat history
+        st.session_state.messages.append({"role": "assistant", "content": response})
+else:
+    st.info("Please configure your Gemini API key to start your therapeutic conversation.")
+
+# Footer
+st.markdown("---")
+st.caption("💭 Remember that while AI can provide support, it's not a substitute for professional mental health services.")
