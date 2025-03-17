@@ -1,4 +1,12 @@
+
+[theme]
+primaryColor = "#4361ee"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f8f9fa"
+textColor = "#1f2937"
+font = "Inter"
+
 [server]
-headless = true
-address = "0.0.0.0"
-port = 5000
+enableCORS = true
+enableXsrfProtection = true
+maxUploadSize = 200

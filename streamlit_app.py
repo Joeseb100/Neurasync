@@ -14,10 +14,66 @@ import threading
 
 # Page configuration
 st.set_page_config(
-    page_title="Neurasync - Emotion Detection",
+    page_title="Neurasync - Your Personal AI Therapist",
     page_icon="🧠",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
+
+# Custom CSS for minimalist design
+st.markdown("""
+<style>
+    /* Main container */
+    .main {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        padding: 2rem;
+        border-radius: 1rem;
+    }
+    
+    /* Headers */
+    h1, h2, h3 {
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        background: linear-gradient(135deg, #7209b7, #3a0ca3);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    /* Buttons */
+    .stButton > button {
+        background: linear-gradient(135deg, #4cc9f0, #4361ee);
+        border: none;
+        border-radius: 0.75rem;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* Cards */
+    .element-container {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+        border-radius: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 1.5rem;
+        margin: 1rem 0;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Progress bars */
+    .stProgress > div > div {
+        background: linear-gradient(135deg, #4cc9f0, #4361ee);
+        border-radius: 1rem;
+    }
+</style>
+""", unsafe_allow_html=True)
 
 # Initialize session state variables
 if "messages" not in st.session_state:
@@ -400,15 +456,46 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# App Header
-st.markdown('<h1 class="main-header">Neurasync: Emotion Analysis</h1>', unsafe_allow_html=True)
+# Hero Section
+st.markdown('<h1 class="main-header">Neurasync: Your Personal AI Therapist</h1>', unsafe_allow_html=True)
 st.markdown("""
-Welcome to Neurasync's Emotion Analysis module. This tool helps you:
-- Detect emotions from your facial expressions
-- Track your stress levels 
-- Get personalized recommendations
-- Chat with Manassu, your AI therapeutic companion
-""")
+<div class="hero-section">
+    <p class="tagline">Experience real-time emotion analysis powered by advanced AI technology</p>
+    <div class="features-grid">
+        🎯 Precise facial analysis<br>
+        🎵 Mood-based music suggestions<br>
+        💬 AI therapeutic companion<br>
+        📊 Comprehensive insights dashboard
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+# Feature Cards
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.markdown("""
+    <div class="feature-card">
+        <h3>Facial Analysis</h3>
+        <p>Real-time emotion detection with stress level monitoring</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown("""
+    <div class="feature-card">
+        <h3>AI Companion</h3>
+        <p>24/7 therapeutic support with personalized insights</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col3:
+    st.markdown("""
+    <div class="feature-card">
+        <h3>Music Therapy</h3>
+        <p>Curated playlists based on your emotional state</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 # API key input section with sidebar
 with st.sidebar:
