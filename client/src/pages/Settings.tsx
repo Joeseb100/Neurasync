@@ -176,7 +176,7 @@ export default function Settings() {
                             <FormItem>
                               <FormLabel>Email Address</FormLabel>
                               <FormControl>
-                                <Input placeholder="you@example.com" {...field} />
+                                <Input placeholder="jophits@gmail.com" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>

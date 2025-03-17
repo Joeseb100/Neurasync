@@ -21,7 +21,7 @@ export default function Dashboard() {
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
           <p className="text-neutral-darker mt-1">
-            Welcome back, {user?.name?.split(' ')[0] || 'User'}. Let's check your wellness today.
+            Welcome back, Jophit. Let's check your wellness today.
           </p>
         </div>
         
@@ -35,13 +35,7 @@ export default function Dashboard() {
             <i className="fas fa-bell"></i>
           </Button>
           
-          <Button 
-            className="bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-md flex items-center transition-colors"
-            onClick={() => setIsAnalysisModalOpen(true)}
-          >
-            <i className="fas fa-play mr-2"></i>
-            <span>Start Analysis</span>
-          </Button>
+          <button data-replit-metadata="client/src/pages/Dashboard.tsx:38:10" data-component-name="Button" class="justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-10 bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-md flex items-center transition-colors"><i data-replit-metadata="client/src/pages/Dashboard.tsx:42:12" data-component-name="i" class="fas fa-play mr-2"></i><span data-replit-metadata="client/src/pages/Dashboard.tsx:43:12" data-component-name="span">Start Analysis</span></button>
         </div>
       </header>
       

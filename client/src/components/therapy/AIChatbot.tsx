@@ -68,7 +68,7 @@ export default function AIChatbot() {
       <CardHeader className="pb-3">
         <div className="flex justify-between items-center">
           <div>
-            <CardTitle className="text-xl font-bold text-primary">Manassu</CardTitle>
+            <CardTitle className="text-xl font-bold text-primary">Njn Koodeyond</CardTitle>
             <CardDescription>
               Your AI therapeutic companion - share what's on your mind
             </CardDescription>

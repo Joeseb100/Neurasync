@@ -67,7 +67,7 @@ export default function Sidebar() {
           </Avatar>
           <div className="hidden md:block ml-3">
             <p className="text-sm font-medium text-foreground">{isLoading ? 'Loading...' : 'Jophit'}</p> {/* Changed name to Jophit */}
-            <p className="text-xs text-muted-foreground">{isLoading ? '' : user?.email}</p>
+            <p className="text-xs text-muted-foreground">{isLoading ? '' : "jophits@gmail.com"}</p>
           </div>
         </div>
       </div>
