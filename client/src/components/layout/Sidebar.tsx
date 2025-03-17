@@ -25,7 +25,7 @@ export default function Sidebar() {
   });
 
   return (
-    <aside className="fixed inset-y-0 left-0 glass glass-highlight shadow-xl w-20 md:w-64 flex flex-col z-10 bg-opacity-80"> {/* Added flex flex-col for better layout */}
+    <aside className="fixed inset-y-0 left-0 glass glass-highlight shadow-xl w-20 md:w-64 flex flex-col z-10 bg-opacity-80 overflow-y-auto"> {/* Added flex flex-col for better layout */}
       <div className="p-4 flex items-center justify-center md:justify-start">
         <div className="h-12 w-12 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
           <span className="text-white text-xl font-bold">N</span>
