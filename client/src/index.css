@@ -3,11 +3,128 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* We'll set these CSS variables dynamically from JavaScript */
+    --background: #0f172a;
+    --foreground: #e2e8f0;
+ 
+    --muted: rgba(255, 255, 255, 0.1);
+    --muted-foreground: #64748b;
+ 
+    --popover: rgba(15, 23, 42, 0.75);
+    --popover-foreground: #f8fafc;
+ 
+    --card: rgba(15, 23, 42, 0.75);
+    --card-foreground: #f8fafc;
+ 
+    --border: #1e293b;
+    --input: #1e293b;
+ 
+    --primary: #3b82f6;
+    --primary-foreground: #ffffff;
+ 
+    --secondary: #0ea5e9;
+    --secondary-foreground: #ffffff;
+ 
+    --accent: #22d3ee;
+    --accent-foreground: #ffffff;
+ 
+    --destructive: #ef4444;
+    --destructive-foreground: #ffffff;
+ 
+    --ring: #3b82f6;
+    
+    /* Glass morphism variables */
+    --glass-background: rgba(15, 23, 42, 0.7);
+    --glass-border: rgba(30, 41, 59, 0.5);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    --glass-highlight: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+ 
+    --radius: 0.75rem;
+    
+    /* RGB versions for gradients */
+    --primary-rgb: 59, 130, 246;
+    --secondary-rgb: 14, 165, 233;
+    --accent-rgb: 34, 211, 238;
+  }
+
   * {
     @apply border-border;
+    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
   }
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    background-image: 
+      radial-gradient(at 20% 30%, rgba(var(--primary-rgb), 0.1) 0, transparent 50%),
+      radial-gradient(at 80% 10%, rgba(var(--secondary-rgb), 0.1) 0, transparent 50%),
+      radial-gradient(at 60% 80%, rgba(var(--accent-rgb), 0.1) 0, transparent 50%);
+    background-attachment: fixed;
+    background-size: 200% 200%;
   }
+}
+
+/* Glass effects */
+.glass {
+  background: var(--glass-background);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--radius);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Glass highlight animation */
+.glass-highlight::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background: var(--glass-highlight);
+  transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  animation: glassHighlight 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes glassHighlight {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  20% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+/* Custom scrollbar for the dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.5);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.8);
+}
+
+/* Custom focus effects */
+*:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }

@@ -25,12 +25,12 @@ export default function Sidebar() {
   });
 
   return (
-    <aside className="fixed inset-y-0 left-0 bg-white shadow-lg w-20 md:w-64 flex flex-col z-10">
+    <aside className="fixed inset-y-0 left-0 glass glass-highlight shadow-xl w-20 md:w-64 flex flex-col z-10 bg-opacity-80">
       <div className="p-4 flex items-center justify-center md:justify-start">
-        <div className="h-12 w-12 rounded-full bg-gradient-to-r from-primary to-[#4ECDC4] flex items-center justify-center">
+        <div className="h-12 w-12 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
           <span className="text-white text-xl font-bold">N</span>
         </div>
-        <h1 className="hidden md:block text-2xl font-bold ml-3 text-gray-800">Neurasync</h1>
+        <h1 className="hidden md:block text-2xl font-bold ml-3 text-foreground">Neurasync</h1>
       </div>
       
       <nav className="flex-1 pt-8">
@@ -39,16 +39,19 @@ export default function Sidebar() {
             const isActive = location === item.url;
             return (
               <li className="mb-2" key={item.url}>
+                {/* Fix for nested a tags - use div instead */}
                 <Link href={item.url}>
-                  <a className={`flex items-center py-3 px-4 relative ${
-                    isActive ? "text-primary" : "text-gray-500 hover:text-primary"
-                  } transition-colors`}>
+                  <div className={`flex items-center py-3 px-4 relative cursor-pointer ${
+                    isActive 
+                      ? "text-primary bg-primary bg-opacity-10" 
+                      : "text-foreground hover:text-primary hover:bg-primary hover:bg-opacity-5"
+                  } transition-all duration-300`}>
                     <i className={`${item.icon} text-xl md:text-lg`}></i>
                     <span className="hidden md:block ml-4">{item.label}</span>
                     {isActive && (
                       <div className="h-full absolute left-0 w-1 bg-primary rounded-r-md"></div>
                     )}
-                  </a>
+                  </div>
                 </Link>
               </li>
             );
@@ -56,15 +59,15 @@ export default function Sidebar() {
         </ul>
       </nav>
       
-      <div className="p-4">
+      <div className="p-4 border-t border-border border-opacity-40">
         <div className="flex items-center">
-          <Avatar className="h-10 w-10">
+          <Avatar className="h-10 w-10 ring-2 ring-primary ring-opacity-30">
             <AvatarImage src={user?.profileImage} alt={user?.name || 'User'} />
-            <AvatarFallback>{user?.name?.charAt(0) || 'U'}</AvatarFallback>
+            <AvatarFallback className="bg-secondary text-secondary-foreground">{user?.name?.charAt(0) || 'U'}</AvatarFallback>
           </Avatar>
           <div className="hidden md:block ml-3">
-            <p className="text-sm font-medium text-gray-800">{isLoading ? 'Loading...' : user?.name}</p>
-            <p className="text-xs text-gray-500">{isLoading ? '' : user?.email}</p>
+            <p className="text-sm font-medium text-foreground">{isLoading ? 'Loading...' : user?.name}</p>
+            <p className="text-xs text-muted-foreground">{isLoading ? '' : user?.email}</p>
           </div>
         </div>
       </div>
