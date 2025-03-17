@@ -1,0 +1,45 @@
+📌 Core Design Principles (Apple-Inspired)
+✅ Minimalist UI – Clean, whitespace-heavy design with soft colors.
+✅ Soft Shadows & Rounded Corners – Elements should feel smooth and premium.
+✅ Subtle Gradients & Glassmorphism – Transparency effects for a modern feel.
+✅ Smooth Animations – Hover effects, micro-interactions, and fluid transitions.
+✅ High-Quality Typography – Use an elegant sans-serif font (SF Pro, Inter, or Poppins).
+✅ Dark & Light Mode Support – A toggle to switch between sleek light and deep dark mode.
+
+🎯 Functional UI Breakdown
+1️⃣ Homepage (Landing Page)
+Tagline & Quick Overview – "Neurasync: Your Personal AI Therapist"
+Hero Section:
+Animated stress/mood analysis demo (smooth, fluid motion).
+A short tagline explaining its purpose.
+Key Features Preview: Interactive icons with:
+Facial Analysis (Webcam-based stress detection)
+Mood-Based Music Suggestions
+Therapy Chatbot (Custom AI for stress relief)
+Insights Dashboard
+CTA Buttons: "Start Analysis" / "Try Demo"
+2️⃣ Stress Analysis & Mood Detection Page
+Live Camera Feed Box (Clean, rounded UI)
+Real-time Facial Expression Detection (Show emotion state smoothly)
+Stress Level Indicator – Simple, accurate, and visually minimal
+Dynamic Background Color Shift (Subtle UI effect based on stress level)
+Button for Detailed Report
+3️⃣ Therapy Chatbot Page
+Sleek, Floating Chat UI (Apple Messages-inspired)
+Smart AI Responses – Minimalist design with smooth animation for messages
+Typing Indicators & Voice Input Support
+Personalized Conversations – Based on past mood data
+4️⃣ Insights & Dashboard
+Clean Graphs & Data Visualizations (Minimal, intuitive, and interactive)
+Mood & Stress Trends (Daily/Weekly analysis)
+Music Recommendation History
+Download Report Option
+5️⃣ Mood-Based Music Recommendation
+Auto-Detect Mood & Suggest Playlists
+Sleek Music Player UI (Apple Music-inspired)
+Dark Mode Optimization
+⚡ Additional Features for Perfection
+Seamless Page Transitions (No harsh reloads, smooth navigation)
+Mobile & Desktop Responsive (Perfect on all devices)
+Minimal Loading Screens (Fast & smooth)
+Elegant Hover Effects (Buttons & icons should feel premium)
