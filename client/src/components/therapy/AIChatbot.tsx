@@ -25,7 +25,10 @@ export default function AIChatbot() {
 
   const sendMessageMutation = useMutation({
     mutationFn: async (content: string) => {
-      return apiRequest("POST", "/api/therapy/message", { content });
+      return apiRequest<Message>("/api/therapy/message", {
+        method: "POST",
+        data: { content }
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/therapy/messages'] });
@@ -61,11 +64,16 @@ export default function AIChatbot() {
   };
 
   return (
-    <Card className="lg:col-span-2 shadow-md">
+    <Card className="lg:col-span-2 shadow-xl glass glass-highlight">
       <CardHeader className="pb-3">
         <div className="flex justify-between items-center">
           <div>
-            <CardTitle className="text-xl font-bold text-primary">Manassu</CardTitle>
+            <CardTitle className="text-xl font-bold text-primary flex items-center">
+              <div className="h-8 w-8 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-white mr-2">
+                <i className="fas fa-brain text-sm"></i>
+              </div>
+              Manassu
+            </CardTitle>
             <CardDescription>
               Your AI therapeutic companion - share what's on your mind
             </CardDescription>
@@ -81,18 +89,18 @@ export default function AIChatbot() {
         </div>
       </CardHeader>
       
-      <Separator />
+      <Separator className="bg-border opacity-30" />
       
       <CardContent className="p-0">
         <div className="h-[400px] flex flex-col">
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             {isLoading ? (
               <div className="flex justify-center p-4">
-                <p className="text-gray-500">Loading conversation...</p>
+                <p className="text-muted-foreground">Loading conversation...</p>
               </div>
             ) : messages.length === 0 ? (
               <div className="flex justify-center p-4">
-                <p className="text-gray-500">No messages yet. Start a conversation!</p>
+                <p className="text-muted-foreground">No messages yet. Start a conversation!</p>
               </div>
             ) : (
               messages.map((message, index) => (
@@ -102,27 +110,27 @@ export default function AIChatbot() {
                 >
                   {message.sender !== 'user' && (
                     <div className="flex-shrink-0 mr-3">
-                      <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white">
+                      <div className="h-10 w-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-white shadow-md">
                         <i className="fas fa-brain text-sm"></i>
                       </div>
                     </div>
                   )}
                   
-                  <div className={`rounded-lg p-4 max-w-[80%] shadow-sm ${
+                  <div className={`rounded-lg p-4 max-w-[80%] shadow-md ${
                     message.sender === 'user' 
-                      ? 'bg-primary text-white' 
-                      : 'bg-neutral-100 text-gray-800'
+                      ? 'bg-primary bg-opacity-90 text-white' 
+                      : 'glass text-foreground'
                   }`}>
-                    <p className={`text-sm ${message.sender === 'user' ? 'text-white' : 'text-gray-800'}`}>
+                    <p className={`text-sm ${message.sender === 'user' ? 'text-white' : 'text-foreground'}`}>
                       {message.content}
                     </p>
                     
                     {message.suggestions && message.suggestions.length > 0 && (
-                      <div className="mt-3 pt-2 border-t border-gray-200 border-opacity-30">
-                        <p className={`text-xs font-medium mb-1 ${message.sender === 'user' ? 'text-white' : 'text-gray-600'}`}>
+                      <div className="mt-3 pt-2 border-t border-white border-opacity-20">
+                        <p className={`text-xs font-medium mb-1 ${message.sender === 'user' ? 'text-white text-opacity-90' : 'text-foreground'}`}>
                           Suggestions:
                         </p>
-                        <ul className={`list-disc pl-5 text-xs space-y-1 ${message.sender === 'user' ? 'text-white' : 'text-gray-600'}`}>
+                        <ul className={`list-disc pl-5 text-xs space-y-1 ${message.sender === 'user' ? 'text-white text-opacity-80' : 'text-foreground'}`}>
                           {message.suggestions.map((suggestion, idx) => (
                             <li key={idx}>{suggestion}</li>
                           ))}
@@ -130,16 +138,16 @@ export default function AIChatbot() {
                       </div>
                     )}
                     
-                    <div className={`text-right mt-1 text-xs ${message.sender === 'user' ? 'text-white text-opacity-80' : 'text-gray-400'}`}>
+                    <div className={`text-right mt-1 text-xs ${message.sender === 'user' ? 'text-white text-opacity-70' : 'text-muted-foreground'}`}>
                       {message.timestamp ? new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : ''}
                     </div>
                   </div>
                   
                   {message.sender === 'user' && (
                     <div className="flex-shrink-0 ml-3">
-                      <Avatar className="h-10 w-10">
+                      <Avatar className="h-10 w-10 ring-2 ring-primary ring-opacity-30">
                         <AvatarImage src={user?.profileImage} alt={user?.name || 'User'} />
-                        <AvatarFallback>{user?.name?.charAt(0) || 'U'}</AvatarFallback>
+                        <AvatarFallback className="bg-secondary text-secondary-foreground">{user?.name?.charAt(0) || 'U'}</AvatarFallback>
                       </Avatar>
                     </div>
                   )}
@@ -151,31 +159,33 @@ export default function AIChatbot() {
         </div>
       </CardContent>
       
-      <CardFooter className="p-4 bg-gray-50 border-t">
-        <form className="flex items-center w-full" onSubmit={handleSubmit}>
-          <Input
-            type="text"
-            placeholder="Share your thoughts here..."
-            className="flex-1 bg-white border-gray-200 rounded-l-md py-3 px-4"
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            disabled={sendMessageMutation.isPending}
-          />
-          <Button 
-            type="submit" 
-            className="bg-primary hover:bg-primary-dark text-white rounded-r-md py-3 px-4 transition-colors"
-            disabled={sendMessageMutation.isPending}
-          >
-            {sendMessageMutation.isPending ? (
-              <i className="fas fa-spinner fa-spin"></i>
-            ) : (
-              <i className="fas fa-paper-plane"></i>
-            )}
-          </Button>
+      <CardFooter className="p-4 border-t border-border border-opacity-30">
+        <form className="flex flex-col w-full" onSubmit={handleSubmit}>
+          <div className="flex items-center w-full">
+            <Input
+              type="text"
+              placeholder="Share your thoughts here..."
+              className="flex-1 glass border-0 rounded-l-md py-3 px-4 text-foreground"
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              disabled={sendMessageMutation.isPending}
+            />
+            <Button 
+              type="submit" 
+              className="bg-primary hover:bg-opacity-90 text-white rounded-r-md py-3 px-4 transition-all"
+              disabled={sendMessageMutation.isPending}
+            >
+              {sendMessageMutation.isPending ? (
+                <i className="fas fa-spinner fa-spin"></i>
+              ) : (
+                <i className="fas fa-paper-plane"></i>
+              )}
+            </Button>
+          </div>
+          <div className="w-full mt-3 text-xs text-center text-muted-foreground">
+            💭 Remember that while AI can provide support, it's not a substitute for professional mental health services.
+          </div>
         </form>
-        <div className="w-full mt-3 text-xs text-center text-gray-500">
-          💭 Remember that while AI can provide support, it's not a substitute for professional mental health services.
-        </div>
       </CardFooter>
     </Card>
   );
