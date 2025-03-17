@@ -108,26 +108,63 @@ def image_to_base64(image):
 
 def detect_emotion(img_base64):
     """
-    Send the image to Neurasync backend for emotion detection.
-    Falls back to direct Gemini analysis if backend is not available.
+    Detect emotion using OpenCV and deepface
     """
     try:
-        # Try to connect to the Neurasync backend first
-        response = requests.post(
-            "http://localhost:5000/api/analysis/emotion",
-            json={"image": img_base64},
-            timeout=10
-        )
+        from deepface import DeepFace
         
-        if response.status_code == 200:
-            return response.json()
-        else:
-            # If backend fails, use Gemini directly for emotion analysis
-            return analyze_emotion_with_gemini(img_base64)
+        # Convert base64 to image
+        img_data = base64.b64decode(img_base64)
+        nparr = np.frombuffer(img_data, np.uint8)
+        img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        
+        # Analyze emotion
+        result = DeepFace.analyze(img, actions=['emotion'], enforce_detection=False)
+        emotions = result[0]['emotion']
+        
+        # Get dominant emotion
+        dominant_emotion = max(emotions.items(), key=lambda x: x[1])[0]
+        confidence = emotions[dominant_emotion]
+        
+        # Map emotion to stress level
+        stress_map = {
+            'happy': 15,
+            'neutral': 30,
+            'sad': 70,
+            'fear': 85,
+            'angry': 90,
+            'disgust': 75,
+            'surprise': 50
+        }
+        
+        stress_level = stress_map.get(dominant_emotion.lower(), 50)
+        
+        # Get secondary emotion
+        emotions_list = sorted(emotions.items(), key=lambda x: x[1], reverse=True)
+        secondary_emotion = emotions_list[1][0]
+        secondary_confidence = emotions_list[1][1]
+        
+        return {
+            "stressLevel": stress_level,
+            "primaryEmotion": {
+                "name": dominant_emotion,
+                "confidence": round(confidence)
+            },
+            "secondaryEmotion": {
+                "name": secondary_emotion,
+                "confidence": round(secondary_confidence)
+            },
+            "insight": f"Your primary emotion appears to be {dominant_emotion.lower()} with {round(confidence)}% confidence. This suggests a {stress_level}% stress level."
+        }
             
-    except requests.exceptions.RequestException:
-        # If backend is unavailable, use Gemini directly
-        return analyze_emotion_with_gemini(img_base64)
+    except Exception as e:
+        print(f"Error in emotion detection: {str(e)}")
+        return {
+            "stressLevel": 30,
+            "primaryEmotion": {"name": "neutral", "confidence": 50},
+            "secondaryEmotion": {"name": "calm", "confidence": 30},
+            "insight": "Unable to detect emotion clearly. Using neutral as default."
+        }
 
 def analyze_emotion_with_gemini(img_base64):
     """Analyze emotion using Gemini directly if backend is unavailable"""

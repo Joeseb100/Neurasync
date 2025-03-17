@@ -7,43 +7,43 @@
     /* We'll set these CSS variables dynamically from JavaScript */
     --background: #0f172a;
     --foreground: #e2e8f0;
- 
+
     --muted: rgba(255, 255, 255, 0.1);
     --muted-foreground: #64748b;
- 
+
     --popover: rgba(15, 23, 42, 0.75);
     --popover-foreground: #f8fafc;
- 
+
     --card: rgba(15, 23, 42, 0.75);
     --card-foreground: #f8fafc;
- 
+
     --border: #1e293b;
     --input: #1e293b;
- 
-    --primary: #3b82f6;
+
+    --primary: #2563eb;
     --primary-foreground: #ffffff;
- 
+
     --secondary: #0ea5e9;
     --secondary-foreground: #ffffff;
- 
+
     --accent: #22d3ee;
     --accent-foreground: #ffffff;
- 
+
     --destructive: #ef4444;
     --destructive-foreground: #ffffff;
- 
+
     --ring: #3b82f6;
-    
+
     /* Glass morphism variables */
     --glass-background: rgba(15, 23, 42, 0.7);
     --glass-border: rgba(30, 41, 59, 0.5);
     --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     --glass-highlight: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
- 
+
     --radius: 0.75rem;
-    
+
     /* RGB versions for gradients */
-    --primary-rgb: 59, 130, 246;
+    --primary-rgb: 37, 99, 235;
     --secondary-rgb: 14, 165, 233;
     --accent-rgb: 34, 211, 238;
   }
