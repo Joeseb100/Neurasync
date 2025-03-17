@@ -4,11 +4,15 @@ import { storage } from "./storage";
 import OpenAI from "openai";
 import { handleEmotionDetection } from "./api/vertexai";
 import { generateAITherapyResponse } from "./api/openai";
+import { generateGeminiResponse } from "./api/gemini";
 
 // Initialize OpenAI
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "sk-dummy-key",
 });
+
+// Gemini API key from environment
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Create API router
@@ -215,12 +219,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Format previous messages for the API
       const chatHistory = previousMessages.map(msg => ({
-        role: msg.sender === 'user' ? 'user' : 'assistant',
+        role: msg.sender === 'user' ? 'user' as const : 'assistant' as const,
         content: msg.content
       }));
       
-      // Get AI response with chat history for context
-      const response = await generateAITherapyResponse(openai, content, chatHistory);
+      let response;
+      
+      // Try Gemini API first if API key is available
+      if (GEMINI_API_KEY) {
+        try {
+          console.log("Using Gemini API for therapy response");
+          response = await generateGeminiResponse(GEMINI_API_KEY, content, chatHistory);
+        } catch (geminiError) {
+          console.error("Gemini API error, falling back to OpenAI:", geminiError);
+          // Fallback to OpenAI if Gemini fails
+          response = await generateAITherapyResponse(openai, content, chatHistory);
+        }
+      } else {
+        // No Gemini API key, fallback to OpenAI
+        console.log("No Gemini API key, using OpenAI for therapy response");
+        
+        try {
+          response = await generateAITherapyResponse(openai, content, chatHistory);
+        } catch (openAiError) {
+          console.error("OpenAI API error, using fallback response:", openAiError);
+          
+          // If OpenAI also fails, provide a fallback response
+          response = {
+            reply: "I'm here to listen and support you. Could you tell me more about how you're feeling?",
+            suggestions: [
+              "Take a few deep breaths",
+              "Consider what might help you feel better right now",
+              "Remember that your feelings are valid"
+            ]
+          };
+        }
+      }
       
       // Save AI response
       const aiMessage = await storage.createMessage({
@@ -233,7 +267,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(aiMessage);
     } catch (error) {
       console.error("Error in therapy message:", error);
-      res.status(500).json({ message: "Failed to process message" });
+      // Return a helpful response even in case of error
+      const fallbackMessage = {
+        sender: "ai",
+        content: "I'm here to listen. What's on your mind today?",
+        suggestions: [
+          "Take a moment to breathe deeply", 
+          "Think about what would help you feel better right now",
+          "Remember that self-care is important"
+        ]
+      };
+      res.json(fallbackMessage);
     }
   });
 
